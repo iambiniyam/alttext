@@ -1,0 +1,28 @@
+name: alttext audit
+description: Fail a workflow when images are missing alt text.
+inputs:
+  path:
+    description: Folder, HTML file, or Markdown file to scan.
+    required: true
+  fail-on-missing:
+    description: Fail when alt text is missing.
+    required: false
+    default: "true"
+runs:
+  using: composite
+  steps:
+    - uses: actions/setup-python@v5
+      with:
+        python-version: "3.12"
+    - shell: bash
+      run: pip install alttext
+    - shell: bash
+      run: |
+        if [ "${{ inputs.fail-on-missing }}" = "true" ]; then
+          alttext scan "${{ inputs.path }}" --fail-on-missing
+        else
+          alttext scan "${{ inputs.path }}"
+        fi
+branding:
+  icon: image
+  color: green
