@@ -23,6 +23,7 @@ def rows(items: list[AltItem], suggestions: list[AltSuggestion | None]) -> list[
                 "text_in_image": suggestion.text_in_image if suggestion else "",
                 "confidence": suggestion.confidence if suggestion else 0.0,
                 "notes": suggestion.notes if suggestion else "",
+                "long_alt": suggestion.long_alt if suggestion else "",
             }
         )
     return output
@@ -53,6 +54,8 @@ def write_markdown(path: Path | str, records: list[dict[str, object]]) -> Path:
         lines.append(f"- Status: {record['status']}")
         lines.append(f"- Current: {record['current_alt'] or 'none'}")
         lines.append(f"- Suggested: {record['suggested_alt'] or 'none'}")
+        if record.get("long_alt"):
+            lines.append(f"- Long description: {record['long_alt']}")
         if record.get("text_in_image"):
             lines.append(f"- Text in image: {record['text_in_image']}")
         lines.append("")

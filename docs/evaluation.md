@@ -54,3 +54,8 @@ Use Qwen3-VL-2B 4-bit MLX as the default. It is the best quality that fits the h
 - Data URIs were ignored.
 - A non-HTTP scheme was rejected.
 - The scanner fetches HTML only; it does not run JavaScript.
+
+
+## Long descriptions
+
+The model now returns an optional `long_alt` for charts, diagrams, and dense images. The review UI exposes it in a second field and includes it in JSON and CSV exports. A synthetic chart was not available for this round, so the long-description path is covered by a data-model test, not a visual quality benchmark.

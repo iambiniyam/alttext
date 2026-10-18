@@ -1,3 +1,3 @@
 """alttext: local-first image accessibility."""
 
-__version__ = "0.1.4"
+__version__ = "0.1.5"

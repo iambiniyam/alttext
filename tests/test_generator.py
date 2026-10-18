@@ -30,3 +30,11 @@ def test_context_is_not_text_in_image():
     assert sanitize_text_in_image("plant health article", "plant health article") == ""
     assert sanitize_text_in_image("TOTAL $14.58", "") == "TOTAL $14.58"
     assert sanitize_text_in_image("short", "") == ""
+
+
+def test_long_alt_round_trip():
+    from alttext.generator import AltSuggestion
+
+    suggestion = AltSuggestion(alt="Sales chart", long_alt="Sales rise through Q3.")
+    payload = suggestion.to_dict()
+    assert payload["long_alt"] == "Sales rise through Q3."

@@ -92,6 +92,10 @@ function card(item, index) {
         <textarea id="alt-${index}" data-field="alt" ${decorative ? "disabled" : ""}>${escapeHtml(suggestion.alt)}</textarea>
       </div>
       <label class="check"><input type="checkbox" data-field="decorative" ${decorative ? "checked" : ""}> Decorative image</label>
+      <div class="field">
+        <label for="long-${index}">Long description <span class="optional">for charts and dense images</span></label>
+        <textarea id="long-${index}" data-field="long_alt" ${decorative ? "disabled" : ""}>${escapeHtml(suggestion.long_alt || "")}</textarea>
+      </div>
       ${suggestion.text_in_image ? `<p class="text-note"><strong>Text in image:</strong> ${escapeHtml(suggestion.text_in_image)}</p>` : ""}
       <div class="card-actions">
         <button class="copy" type="button" data-index="${index}">Copy alt text</button>
@@ -115,16 +119,21 @@ function render(data) {
 cards.addEventListener("change", (event) => {
   if (event.target.dataset.field !== "decorative") return;
   const card = event.target.closest(".card");
-  const textarea = card.querySelector("textarea");
+  const textarea = card.querySelector('textarea[data-field="alt"]');
+  const longField = card.querySelector('textarea[data-field="long_alt"]');
   textarea.disabled = event.target.checked;
-  if (event.target.checked) textarea.value = "";
+  if (longField) longField.disabled = event.target.checked;
+  if (event.target.checked) {
+    textarea.value = "";
+    if (longField) longField.value = "";
+  }
 });
 
 cards.addEventListener("click", async (event) => {
   const button = event.target.closest(".copy");
   if (!button) return;
   const card = button.closest(".card");
-  const textarea = card.querySelector("textarea");
+  const textarea = card.querySelector('textarea[data-field="alt"]');
   const text = textarea.value.trim();
   try {
     await navigator.clipboard.writeText(text);
@@ -138,11 +147,13 @@ cards.addEventListener("click", async (event) => {
 function rows() {
   return state.items.map((item, index) => {
     const card = cards.querySelector(`[data-index="${index}"]`);
-    const textarea = card.querySelector("textarea");
+    const textarea = card.querySelector('textarea[data-field="alt"]');
+    const longField = card.querySelector('textarea[data-field="long_alt"]');
     const decorative = card.querySelector('[data-field="decorative"]').checked;
     return {
       name: item.name,
       alt: decorative ? "" : textarea.value.trim(),
+      long_alt: decorative ? "" : (longField ? longField.value.trim() : ""),
       decorative,
       text_in_image: item.suggestion.text_in_image || "",
       confidence: item.suggestion.confidence || 0,
@@ -164,7 +175,7 @@ jsonButton.addEventListener("click", () => {
 });
 
 csvButton.addEventListener("click", () => {
-  const columns = ["name", "alt", "decorative", "text_in_image", "confidence", "notes"];
+  const columns = ["name", "alt", "long_alt", "decorative", "text_in_image", "confidence", "notes"];
   const q = (value) => `"${String(value == null ? "" : value).replaceAll('"', '""')}"`;
   const lines = [columns.join(",")].concat(rows().map((row) => columns.map((column) => q(row[column])).join(",")));
   download(new Blob([lines.join("\n")], { type: "text/csv;charset=utf-8" }), "alttext.csv");

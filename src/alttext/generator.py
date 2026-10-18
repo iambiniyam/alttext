@@ -21,6 +21,7 @@ class AltSuggestion:
     text_in_image: str = ""
     confidence: float = 0.0
     notes: str = ""
+    long_alt: str = ""
 
     def to_dict(self) -> dict[str, object]:
         return {
@@ -29,6 +30,7 @@ class AltSuggestion:
             "text_in_image": self.text_in_image,
             "confidence": round(self.confidence, 3),
             "notes": self.notes,
+            "long_alt": self.long_alt,
         }
 
 
@@ -59,12 +61,13 @@ Rules:
 - Do not start with "image of" or "photo of".
 - If the image is decorative and carries no information, set decorative true and alt empty.
 - If text appears in the image, copy at most 120 characters into text_in_image, with no newlines.
+- For a chart, diagram, or dense infographic, write a long_alt of one to three sentences, under 500 characters. Otherwise leave long_alt empty.
 - If you are unsure, use a lower confidence.
 
 Context: {context}
 
 JSON shape:
-{{"alt": "...", "decorative": false, "text_in_image": "", "confidence": 0.0, "notes": ""}}
+{{"alt": "...", "decorative": false, "text_in_image": "", "confidence": 0.0, "notes": "", "long_alt": ""}}
 """
 
 PREFIXES = (
@@ -192,6 +195,7 @@ class MlxQwenGenerator:
             text_in_image=sanitize_text_in_image(data.get("text_in_image"), context),
             confidence=max(0.0, min(1.0, float(data.get("confidence") or 0.0))),
             notes=str(data.get("notes") or "")[:200],
+            long_alt=" ".join(str(data.get("long_alt") or "").split())[:500],
         )
 
 

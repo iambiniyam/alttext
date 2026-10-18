@@ -112,6 +112,7 @@ def generate(
                 "text_in_image": suggestion.text_in_image,
                 "confidence": suggestion.confidence,
                 "notes": suggestion.notes,
+                "long_alt": suggestion.long_alt,
             }
         )
     payload = {
