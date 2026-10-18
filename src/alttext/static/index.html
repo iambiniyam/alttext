@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="light dark">
   <title>alttext: write alt text that helps</title>
-  <link rel="stylesheet" href="/static/app.css">
-  <script src="/static/app.js" defer></script>
+  <link rel="stylesheet" href="/static/app.css?v=5">
+  <script src="/static/app.js?v=5" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -42,6 +42,28 @@
       <div class="controls">
         <button id="go" class="btn" type="button">Write alt text</button>
         <p id="status" class="status" role="status" aria-live="polite"></p>
+      </div>
+    </section>
+
+
+    <section class="panel url-panel" aria-labelledby="url-title">
+      <h2 id="url-title">Audit a public page</h2>
+      <p class="meta">Fetch HTML only. No browser, no login, and no image downloads.</p>
+      <form id="url-form" class="url-form">
+        <label class="sr-only" for="url">Public page URL</label>
+        <input id="url" name="url" type="url" required placeholder="https://example.com" autocomplete="url">
+        <button id="url-go" class="btn ghost" type="submit">Scan page</button>
+      </form>
+      <p id="url-status" class="status" role="status" aria-live="polite"></p>
+      <div id="url-result" hidden>
+        <p id="url-summary" class="meta"></p>
+        <div class="table-wrap" tabindex="0" role="region" aria-label="Page image audit">
+          <table>
+            <thead><tr><th>Status</th><th>Image</th><th>Context</th></tr></thead>
+            <tbody id="url-rows"></tbody>
+          </table>
+        </div>
+        <div class="actions"><button id="url-json" class="btn ghost" type="button">Download JSON</button></div>
       </div>
     </section>
 

@@ -209,3 +209,63 @@ document.addEventListener("keydown", (event) => {
     suggest();
   }
 });
+
+const urlForm = document.getElementById("url-form");
+const urlInput = document.getElementById("url");
+const urlGo = document.getElementById("url-go");
+const urlStatus = document.getElementById("url-status");
+const urlResult = document.getElementById("url-result");
+const urlSummary = document.getElementById("url-summary");
+const urlRows = document.getElementById("url-rows");
+const urlJson = document.getElementById("url-json");
+let lastUrlReport = null;
+
+function setUrlStatus(message, isError = false) {
+  urlStatus.textContent = message;
+  urlStatus.classList.toggle("is-error", isError);
+}
+
+urlForm.addEventListener("submit", async (event) => {
+  event.preventDefault();
+  const url = urlInput.value.trim();
+  if (!/^https?:\/\//i.test(url)) {
+    setUrlStatus("Enter a URL that starts with http:// or https://.", true);
+    return;
+  }
+  urlGo.disabled = true;
+  urlGo.textContent = "Scanning...";
+  urlResult.hidden = true;
+  setUrlStatus("Fetching the page locally.");
+  const body = new FormData();
+  body.append("url", url);
+  try {
+    const response = await fetch("/api/scan-url", { method: "POST", body });
+    const data = await response.json().catch(() => ({}));
+    if (!response.ok) throw new Error(data.detail || `Server returned ${response.status}`);
+    lastUrlReport = data;
+    const counts = data.counts || {};
+    urlSummary.textContent = `${data.items.length} images · ${Object.entries(counts).map(([key, value]) => `${value} ${key}`).join(", ")}`;
+    urlRows.innerHTML = data.items.map((item) => `<tr>
+      <td>${escapeHtml(item.status)}</td>
+      <td>${escapeHtml(item.ref)}</td>
+      <td>${escapeHtml(item.context || "")}</td>
+    </tr>`).join("") || '<tr><td colspan="3">No images found on the page.</td></tr>';
+    urlResult.hidden = false;
+    setUrlStatus(data.warnings && data.warnings.length ? data.warnings.join(" ") : "Done. Review the missing alt text.");
+  } catch (error) {
+    setUrlStatus(error.message, true);
+  } finally {
+    urlGo.disabled = false;
+    urlGo.textContent = "Scan page";
+  }
+});
+
+urlJson.addEventListener("click", () => {
+  if (!lastUrlReport) return;
+  const blob = new Blob([JSON.stringify(lastUrlReport, null, 2)], { type: "application/json" });
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = "alttext-url-report.json";
+  link.click();
+  URL.revokeObjectURL(link.href);
+});

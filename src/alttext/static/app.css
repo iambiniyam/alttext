@@ -80,3 +80,15 @@ textarea { min-height:80px; padding:10px 12px; border:1px solid var(--line); bor
   .result-head { flex-direction:column; gap:2px; }
 }
 @media (prefers-reduced-motion:reduce) { *,*::before,*::after { animation-duration:.01ms !important; transition-duration:.01ms !important; } }
+
+.url-panel { margin-top: 20px; }
+.url-panel h2 { margin: 0 0 2px; font-size: 1.125rem; }
+.url-form { display: flex; gap: 8px; margin-top: 12px; }
+.url-form input { flex: 1; min-width: 0; min-height: 44px; padding: 0 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); color: var(--ink); font: inherit; font-size: .875rem; }
+.url-panel .table-wrap { margin-top: 12px; }
+.url-panel table { width: 100%; border-collapse: collapse; font-size: .8125rem; }
+.url-panel th, .url-panel td { text-align: left; padding: 8px 6px; border-bottom: 1px solid var(--line); vertical-align: top; }
+.url-panel th { color: var(--muted); font-size: .75rem; }
+.url-panel td:first-child { white-space: nowrap; color: var(--muted); }
+.url-panel td:nth-child(2) { overflow-wrap: anywhere; }
+@media (max-width: 700px) { .url-form { flex-direction: column; } }
