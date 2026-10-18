@@ -148,7 +148,7 @@ The GitHub Action runs the scanner in CI:
 pytest -q
 ```
 
-The suite has 12 tests covering image folder scanning, HTML and Markdown parsing, URL scanning, DOCX auditing, report merging, HTML patching, text-in-image filtering, and the deterministic fallback. The model is not required for tests.
+The suite has 13 tests covering image folder scanning, HTML and Markdown parsing, URL scanning, DOCX auditing, report merging, HTML patching, text-in-image filtering, and the deterministic fallback. The model is not required for tests.
 
 ## Roadmap
 
