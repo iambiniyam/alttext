@@ -121,10 +121,11 @@ Decorative images should have `alt=""`, not a description. The UI makes that exp
 alttext is a Python package. It is not an npm package because the model runtime is Python.
 
 - PyPI: `pip install alttext`
+- Release wheel: `pip install https://github.com/iambiniyam/alttext/releases/download/v0.1.0/alttext-0.1.0-py3-none-any.whl`
 - GitHub Action: `uses: iambiniyam/alttext@v0.1.0`
 - Model download: `python scripts/download_model.py`
 
-The release workflow uses PyPI Trusted Publishing. A maintainer only needs to configure the PyPI project and the `pypi` environment once. No API token is stored in the repository.
+The release workflow uses PyPI Trusted Publishing. A maintainer configures the PyPI project and the `pypi` environment once, then sets the repository variable `PUBLISH_PYPI=true`. No API token is stored in the repository. Until that setup exists, install the wheel attached to the GitHub release.
 
 The GitHub Action runs the scanner in CI:
 
