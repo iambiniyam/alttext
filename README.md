@@ -6,7 +6,7 @@ Point alttext at a folder, an HTML page, or a Markdown file. It finds images tha
 
 ![alttext web UI](docs/demo.png)
 
-Status: v0.1.2. Local model, local review, no upload.
+Status: v0.1.3. Local model, local review, no upload.
 
 ## Why
 
@@ -54,6 +54,7 @@ alttext generate ./site --model heuristic
 alttext scan ./images
 alttext scan ./index.html
 alttext scan ./notes.md
+altext scan ./report.docx
 
 # audit a public page without a browser
 alttext scan-url https://example.com --fail-on-missing
@@ -127,7 +128,7 @@ Decorative images should have `alt=""`, not a description. The UI makes that exp
 alttext is a Python package. It is not an npm package because the model runtime is Python.
 
 - PyPI: `pip install alttext`
-- Release wheel: `pip install https://github.com/iambiniyam/alttext/releases/download/v0.1.2/alttext-0.1.2-py3-none-any.whl`
+- Release wheel: `pip install https://github.com/iambiniyam/alttext/releases/download/v0.1.3/alttext-0.1.3-py3-none-any.whl`
 - GitHub Action: `uses: iambiniyam/alttext@v0.1.0`
 - Model download: `python scripts/download_model.py`
 
@@ -147,13 +148,13 @@ The GitHub Action runs the scanner in CI:
 pytest -q
 ```
 
-The suite has 11 tests covering image folder scanning, HTML and Markdown parsing, URL scanning, report merging, HTML patching, text-in-image filtering, and the deterministic fallback. The model is not required for tests.
+The suite has 12 tests covering image folder scanning, HTML and Markdown parsing, URL scanning, DOCX auditing, report merging, HTML patching, text-in-image filtering, and the deterministic fallback. The model is not required for tests.
 
 ## Roadmap
 
 - generate long descriptions for charts and infographics
 - batch review with keyboard shortcuts
-- support for Word and PDF documents
+- PDF document support
 - a public benchmark of alt-text quality
 
 ## Related tools

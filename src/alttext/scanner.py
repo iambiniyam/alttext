@@ -108,6 +108,31 @@ def scan_markdown(path: Path) -> ScanResult:
     return result
 
 
+def scan_docx(path: Path) -> ScanResult:
+    """Audit alt text on images embedded in a DOCX file."""
+    from docx import Document
+
+    result = ScanResult()
+    document = Document(str(path))
+    for index, shape in enumerate(document.inline_shapes, start=1):
+        doc_pr = shape._inline.docPr
+        alt = doc_pr.get("descr")
+        title = doc_pr.get("title")
+        result.items.append(
+            AltItem(
+                ref=f"image {index}",
+                source=str(path),
+                kind="docx",
+                current_alt=alt,
+                context=title or path.stem,
+                status=_status(alt),
+            )
+        )
+    if not result.items:
+        result.warnings.append("no inline images found in the DOCX file")
+    return result
+
+
 def scan_folder(path: Path) -> ScanResult:
     result = ScanResult()
     for file in sorted(path.rglob("*")):
@@ -136,6 +161,8 @@ def scan_path(path: Path | str) -> ScanResult:
         return scan_html(path)
     if suffix in {".md", ".markdown"}:
         return scan_markdown(path)
+    if suffix == ".docx":
+        return scan_docx(path)
     if suffix in IMAGE_SUFFIXES:
         return ScanResult(
             items=[

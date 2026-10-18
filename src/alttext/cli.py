@@ -87,7 +87,11 @@ def generate(
 ) -> None:
     """Write alt text for images that are missing it."""
     result = scan_path(path)
-    todo = [item for item in result.items if item.status == "missing"]
+    todo = [
+        item for item in result.items if item.status == "missing" and item.kind != "docx"
+    ]
+    if any(item.kind == "docx" for item in result.items):
+        result.warnings.append("DOCX images are audited but not generated; edit the DOCX directly.")
     generator = build_generator(model)
     records = []
     suggestions = []
