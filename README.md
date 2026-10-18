@@ -6,7 +6,7 @@ Point alttext at a folder, an HTML page, or a Markdown file. It finds images tha
 
 ![alttext web UI](docs/demo.png)
 
-Status: v0.1.3. Local model, local review, no upload.
+Status: v0.1.4. Local model, local review, no upload.
 
 ## Why
 
@@ -25,6 +25,7 @@ alttext is built for batches and for review. It writes a first draft, flags deco
 - Lets you mark an image as decorative.
 - Exports JSON, CSV, and a Markdown report.
 - Patches the alt attributes in an HTML file.
+- Audits image alt text in DOCX files and figure alt text in tagged PDFs.
 
 ## Quickstart
 
@@ -54,7 +55,9 @@ alttext generate ./site --model heuristic
 alttext scan ./images
 alttext scan ./index.html
 alttext scan ./notes.md
-altext scan ./report.docx
+alttext scan ./report.docx
+# audit figure alt text in a tagged PDF
+alttext scan ./tagged.pdf
 
 # audit a public page without a browser
 alttext scan-url https://example.com --fail-on-missing
@@ -128,7 +131,7 @@ Decorative images should have `alt=""`, not a description. The UI makes that exp
 alttext is a Python package. It is not an npm package because the model runtime is Python.
 
 - PyPI: `pip install alttext`
-- Release wheel: `pip install https://github.com/iambiniyam/alttext/releases/download/v0.1.3/alttext-0.1.3-py3-none-any.whl`
+- Release wheel: `pip install https://github.com/iambiniyam/alttext/releases/download/v0.1.4/alttext-0.1.4-py3-none-any.whl`
 - GitHub Action: `uses: iambiniyam/alttext@v0.1.0`
 - Model download: `python scripts/download_model.py`
 
@@ -148,13 +151,12 @@ The GitHub Action runs the scanner in CI:
 pytest -q
 ```
 
-The suite has 13 tests covering image folder scanning, HTML and Markdown parsing, URL scanning, DOCX auditing, report merging, HTML patching, text-in-image filtering, and the deterministic fallback. The model is not required for tests.
+The suite has 15 tests covering image folder scanning, HTML and Markdown parsing, URL scanning, DOCX and tagged-PDF auditing, report merging, HTML patching, text-in-image filtering, and the deterministic fallback. The model is not required for tests.
 
 ## Roadmap
 
 - generate long descriptions for charts and infographics
 - batch review with keyboard shortcuts
-- PDF document support
 - a public benchmark of alt-text quality
 
 ## Related tools

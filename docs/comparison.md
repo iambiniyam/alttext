@@ -9,7 +9,7 @@
 ## What alttext does differently
 
 - Local Qwen3-VL 4-bit on Apple MLX, with a heuristic fallback for tests.
-- Audits folders, HTML, Markdown, DOCX, and public HTML pages, from the CLI or the web UI.
+- Audits folders, HTML, Markdown, DOCX, tagged PDFs, and public HTML pages, from the CLI or the web UI.
 - Produces a reviewable report and can patch HTML.
 - Ships a GitHub Action that fails a workflow on missing alt text.
 

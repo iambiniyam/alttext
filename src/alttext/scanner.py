@@ -133,6 +133,56 @@ def scan_docx(path: Path) -> ScanResult:
     return result
 
 
+def scan_pdf(path: Path) -> ScanResult:
+    """Audit /Alt values on Figure elements in a tagged PDF."""
+    import pikepdf
+
+    result = ScanResult()
+    pdf = pikepdf.Pdf.open(path)
+    root = pdf.Root.get("/StructTreeRoot")
+    if root is None:
+        result.warnings.append("PDF has no tagged structure tree; image alt text cannot be audited")
+        return result
+    figures: list[tuple[str | None, str]] = []
+
+    def walk(node) -> None:
+        if isinstance(node, pikepdf.Array):
+            for item in node:
+                walk(item)
+            return
+        if not isinstance(node, pikepdf.Dictionary):
+            return
+        kind = str(node.get("/S", ""))
+        if kind in {"/Figure", "/Formula"}:
+            alt = node.get("/Alt")
+            title = node.get("/T")
+            figures.append(
+                (
+                    None if alt is None else str(alt),
+                    str(title) if title is not None else "",
+                )
+            )
+        child = node.get("/K")
+        if child is not None:
+            walk(child)
+
+    walk(root.get("/K", []))
+    for index, (alt, title) in enumerate(figures, start=1):
+        result.items.append(
+            AltItem(
+                ref=f"figure {index}",
+                source=str(path),
+                kind="pdf",
+                current_alt=alt,
+                context=title or path.stem,
+                status=_status(alt),
+            )
+        )
+    if not figures:
+        result.warnings.append("no Figure elements found in the tagged PDF")
+    return result
+
+
 def scan_folder(path: Path) -> ScanResult:
     result = ScanResult()
     for file in sorted(path.rglob("*")):
@@ -163,6 +213,8 @@ def scan_path(path: Path | str) -> ScanResult:
         return scan_markdown(path)
     if suffix == ".docx":
         return scan_docx(path)
+    if suffix == ".pdf":
+        return scan_pdf(path)
     if suffix in IMAGE_SUFFIXES:
         return ScanResult(
             items=[
