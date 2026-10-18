@@ -19,7 +19,7 @@ MAX_UPLOAD = 12 * 1024 * 1024
 MAX_FILES = 20
 Image.MAX_IMAGE_PIXELS = 40_000_000
 
-app = FastAPI(title="alttext", version="0.1.0")
+app = FastAPI(title="alttext", version="0.1.1")
 app.mount("/static", StaticFiles(directory=STATIC), name="static")
 generator = build_generator("auto")
 lock = threading.Lock()

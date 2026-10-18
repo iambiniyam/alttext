@@ -4,18 +4,31 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import httpx
 import typer
 from PIL import Image
 from rich.console import Console
 from rich.table import Table
 
+from . import __version__
 from .config import model_dir
 from .generator import build_generator
+from .remote import scan_url
 from .report import apply_html, write_csv, write_json, write_markdown
 from .scanner import scan_path
 
 app = typer.Typer(help="Local-first alt text and image accessibility audit.", no_args_is_help=True)
 console = Console()
+
+
+@app.callback(invoke_without_command=True)
+def _root(
+    version: bool = typer.Option(False, "--version", is_eager=True, help="Show the version and exit."),
+) -> None:
+    if version:
+        console.print(__version__)
+        raise typer.Exit()
+
 
 
 @app.command()
@@ -32,6 +45,29 @@ def scan(
     table = Table("Status", "Reference", "Context")
     for item in result.items:
         table.add_row(item.status, item.ref, item.context[:70])
+    console.print(table)
+    for warning in result.warnings:
+        console.print(f"[yellow]warning:[/yellow] {warning}")
+    if fail_on_missing and counts.get("missing", 0):
+        raise typer.Exit(code=1)
+
+
+@app.command("scan-url")
+def scan_url_command(
+    url: str = typer.Argument(..., help="Page to audit, for example https://example.com"),
+    fail_on_missing: bool = typer.Option(False, "--fail-on-missing"),
+) -> None:
+    """Audit the images on a public HTML page without a browser."""
+    try:
+        result = scan_url(url)
+    except (ValueError, httpx.HTTPError) as exc:
+        console.print(f"[red]could not scan URL: {exc}[/red]")
+        raise typer.Exit(code=2) from exc
+    counts = result.counts()
+    console.print(f"[bold]{sum(counts.values())}[/bold] images · {counts}")
+    table = Table("Status", "Image", "Context")
+    for item in result.items:
+        table.add_row(item.status, item.ref[:80], item.context[:55])
     console.print(table)
     for warning in result.warnings:
         console.print(f"[yellow]warning:[/yellow] {warning}")
@@ -111,8 +147,8 @@ def serve(port: int = typer.Option(8791, "--port")) -> None:
 def doctor() -> None:
     """Check the model and runtime."""
     folder = model_dir()
-    ready = (folder / "model.safetensors").exists() or (folder / "pytorch_model.bin").exists()
-    console.print("model: [bold]florence-2[/bold]")
+    ready = (folder / "model.safetensors").exists()
+    console.print("model: [bold]qwen3-vl-2b-4bit[/bold]")
     console.print(f"path: {folder}")
     console.print(f"weights: {'ready' if ready else 'missing'}")
     if not ready:

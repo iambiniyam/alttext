@@ -6,9 +6,11 @@ Point alttext at a folder, an HTML page, or a Markdown file. It finds images tha
 
 ![alttext web UI](docs/demo.png)
 
-Status: v0.1.0. Local model, local review, no upload.
+Status: v0.1.1. Local model, local review, no upload.
 
 ## Why
+
+See [how this compares](docs/comparison.md) with the closest tools.
 
 Missing alt text is one of the most common accessibility failures on the web. A blind reader gets "image" or nothing at all. Most alt-text tools are one-image demos that send the image to a paid API.
 
@@ -16,7 +18,7 @@ alttext is built for batches and for review. It writes a first draft, flags deco
 
 ## What it does
 
-- Scans image folders, HTML files, and Markdown files.
+- Scans image folders, HTML files, Markdown files, and public HTML pages without a browser.
 - Finds missing alt attributes and empty descriptions.
 - Writes alt text with Qwen3-VL-2B, 4-bit, through Apple MLX.
 - Flags images that contain important text.
@@ -52,6 +54,9 @@ alttext generate ./site --model heuristic
 alttext scan ./images
 alttext scan ./index.html
 alttext scan ./notes.md
+
+# audit a public page without a browser
+alttext scan-url https://example.com --fail-on-missing
 
 # write suggestions and a report
 alttext generate ./images --out report.json
@@ -107,6 +112,7 @@ Decorative images should have `alt=""`, not a description. The UI makes that exp
 - Remote images are skipped and listed as warnings.
 - Complex charts need a human-written long description, not a short alt string.
 - The model can be wrong about the image purpose, especially in a dense interface.
+- `scan-url` fetches HTML only. It does not run JavaScript or audit images behind a login.
 - Screenshots are described by their visual content, not by the app name. Add context and review.
 
 ## Privacy
@@ -121,7 +127,7 @@ Decorative images should have `alt=""`, not a description. The UI makes that exp
 alttext is a Python package. It is not an npm package because the model runtime is Python.
 
 - PyPI: `pip install alttext`
-- Release wheel: `pip install https://github.com/iambiniyam/alttext/releases/download/v0.1.0/alttext-0.1.0-py3-none-any.whl`
+- Release wheel: `pip install https://github.com/iambiniyam/alttext/releases/download/v0.1.1/alttext-0.1.1-py3-none-any.whl`
 - GitHub Action: `uses: iambiniyam/alttext@v0.1.0`
 - Model download: `python scripts/download_model.py`
 
@@ -141,13 +147,11 @@ The GitHub Action runs the scanner in CI:
 pytest -q
 ```
 
-The suite has 9 tests covering image folder scanning, HTML and Markdown parsing, report merging, HTML patching, text-in-image filtering, and the deterministic fallback. The model is not required for tests.
+The suite has 11 tests covering image folder scanning, HTML and Markdown parsing, URL scanning, report merging, HTML patching, text-in-image filtering, and the deterministic fallback. The model is not required for tests.
 
 ## Roadmap
 
-- scan a live URL with Playwright
 - generate long descriptions for charts and infographics
-- a GitHub Action that fails on missing alt text
 - batch review with keyboard shortcuts
 - support for Word and PDF documents
 - a public benchmark of alt-text quality

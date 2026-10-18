@@ -46,3 +46,11 @@ Prompt requirements: purpose over style, under 160 characters, no "image of", al
 ## Decision
 
 Use Qwen3-VL-2B 4-bit MLX as the default. It is the best quality that fits the hardware. Keep the heuristic fallback for tests and machines without MLX. Florence-2 was tested as a fallback but produced vaguer captions and needed an older Transformers stack, so it is not shipped.
+
+
+## URL scanning check
+
+- A local HTML test page with one missing alt and one present alt produced 1 missing and 1 present result.
+- Data URIs were ignored.
+- A non-HTTP scheme was rejected.
+- The scanner fetches HTML only; it does not run JavaScript.
