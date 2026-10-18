@@ -6,7 +6,7 @@ Point alttext at a folder, an HTML page, or a Markdown file. It finds images tha
 
 ![alttext web UI](docs/demo.png)
 
-Status: v0.1.6. Local model, local review, no upload.
+Status: v0.1.7. Local model, local review, no upload.
 
 ## Why
 
@@ -132,7 +132,7 @@ Decorative images should have `alt=""`, not a description. The UI makes that exp
 alttext is a Python package. It is not an npm package because the model runtime is Python.
 
 - PyPI: `pip install alttext`
-- Release wheel: `pip install https://github.com/iambiniyam/alttext/releases/download/v0.1.6/alttext-0.1.6-py3-none-any.whl`
+- Release wheel: `pip install https://github.com/iambiniyam/alttext/releases/download/v0.1.7/alttext-0.1.7-py3-none-any.whl`
 - GitHub Action: `uses: iambiniyam/alttext@v0.1.0`
 - Model download: `python scripts/download_model.py`
 
@@ -152,7 +152,7 @@ The GitHub Action runs the scanner in CI:
 pytest -q
 ```
 
-The suite has 16 tests covering image folder scanning, HTML and Markdown parsing, URL scanning, DOCX and tagged-PDF auditing, report merging, HTML patching, text-in-image filtering, and the deterministic fallback. The model is not required for tests.
+The suite has 17 tests, including a Playwright/axe browser check of the initial and URL-audit states. covering image folder scanning, HTML and Markdown parsing, URL scanning, DOCX and tagged-PDF auditing, report merging, HTML patching, text-in-image filtering, and the deterministic fallback. The model is not required for tests.
 
 ## Roadmap
 

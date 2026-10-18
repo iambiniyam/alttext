@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "alttext"
-version = "0.1.6"
+version = "0.1.7"
 description = "Local-first alt text and image accessibility audit."
 readme = "README.md"
 license = { text = "MIT" }
@@ -35,6 +35,7 @@ Issues = "https://github.com/iambiniyam/alttext/issues"
 
 [project.optional-dependencies]
 model = ["mlx-vlm>=0.7.8"]
+browser = ["playwright>=1.49"]
 dev = ["httpx>=0.27", "pytest>=8.3", "ruff>=0.6"]
 
 [project.scripts]

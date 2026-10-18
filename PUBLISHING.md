@@ -18,6 +18,6 @@ The workflow uses OIDC. No token is stored.
 ## Direct install
 
 ```bash
-pip install https://github.com/iambiniyam/alttext/releases/download/v0.1.6/alttext-0.1.6-py3-none-any.whl
+pip install https://github.com/iambiniyam/alttext/releases/download/v0.1.7/alttext-0.1.7-py3-none-any.whl
 python scripts/download_model.py
 ```
