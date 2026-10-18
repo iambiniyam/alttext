@@ -58,4 +58,16 @@ Use Qwen3-VL-2B 4-bit MLX as the default. It is the best quality that fits the h
 
 ## Long descriptions
 
-The model now returns an optional `long_alt` for charts, diagrams, and dense images. The review UI exposes it in a second field and includes it in JSON and CSV exports. A synthetic chart was not available for this round, so the long-description path is covered by a data-model test, not a visual quality benchmark.
+A generated 900x560 bar chart was used to test the long-description path.
+
+First run:
+
+> A bar chart titled 'Quarterly revenue' shows the revenue for each quarter: Q1 at $120k, Q2 at $180k, Q3 at $150k, and Q4 at $240k. The bars increase from left to right, indicating a rise in revenue over the four quarters.
+
+The values are correct, but the trend claim is false: Q3 is lower than Q2.
+
+The prompt was tightened to require evidence for any trend claim. Second run:
+
+> Bar chart showing quarterly revenue: Q1 $120k, Q2 $180k, Q3 $150k, Q4 $240k. The chart is a bar graph with the vertical axis representing revenue and the horizontal axis representing the quarters.
+
+This run is accurate and useful. Latency was 12.2 seconds after the model was already loaded. This is one synthetic chart, not a chart-understanding benchmark.

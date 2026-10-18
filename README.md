@@ -6,7 +6,7 @@ Point alttext at a folder, an HTML page, or a Markdown file. It finds images tha
 
 ![alttext web UI](docs/demo.png)
 
-Status: v0.1.5. Local model, local review, no upload.
+Status: v0.1.6. Local model, local review, no upload.
 
 ## Why
 
@@ -132,7 +132,7 @@ Decorative images should have `alt=""`, not a description. The UI makes that exp
 alttext is a Python package. It is not an npm package because the model runtime is Python.
 
 - PyPI: `pip install alttext`
-- Release wheel: `pip install https://github.com/iambiniyam/alttext/releases/download/v0.1.5/alttext-0.1.5-py3-none-any.whl`
+- Release wheel: `pip install https://github.com/iambiniyam/alttext/releases/download/v0.1.6/alttext-0.1.6-py3-none-any.whl`
 - GitHub Action: `uses: iambiniyam/alttext@v0.1.0`
 - Model download: `python scripts/download_model.py`
 

@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "alttext"
-version = "0.1.5"
+version = "0.1.6"
 description = "Local-first alt text and image accessibility audit."
 readme = "README.md"
 license = { text = "MIT" }

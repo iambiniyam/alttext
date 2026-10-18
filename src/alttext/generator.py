@@ -61,7 +61,7 @@ Rules:
 - Do not start with "image of" or "photo of".
 - If the image is decorative and carries no information, set decorative true and alt empty.
 - If text appears in the image, copy at most 120 characters into text_in_image, with no newlines.
-- For a chart, diagram, or dense infographic, write a long_alt of one to three sentences, under 500 characters. Otherwise leave long_alt empty.
+- For a chart, diagram, or dense infographic, write a long_alt of one to three sentences, under 500 characters. State the chart type and key values. Do not claim a trend unless every step supports it. Otherwise leave long_alt empty.
 - If you are unsure, use a lower confidence.
 
 Context: {context}
